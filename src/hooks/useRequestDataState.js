@@ -3,6 +3,7 @@ import axios from "axios";
 
 const useRequestDataState = (initalVal) => {
   const [value, setValue] = useState(initalVal);
+
   const handleDataRequest = async (searchTerm) => {
     const response = await axios.get("http://www.omdbapi.com/", {
       params: {
@@ -14,11 +15,15 @@ const useRequestDataState = (initalVal) => {
     if (movies) {
       setValue(movies);
     } else {
-      setValue([]);
+      setValue(initalVal);
     }
   };
 
-  return [value, handleDataRequest];
+  const reset = () => {
+    setValue(initalVal);
+  };
+
+  return [value, handleDataRequest, reset];
 };
 
 export default useRequestDataState;
