@@ -1,24 +1,33 @@
 import React, { useState, useEffect } from "react";
 import useInputState from "../hooks/useInputState";
 import useRequestDataState from "../hooks/useRequestDataState";
+import useIdState from "../hooks/useInputState";
 import { MovieResults } from "./MovieResults";
 import { MovieDetailes } from "./MovieDetailes";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
-import axios from "axios";
+import useMovieState from "../hooks/useMovieState";
 
 export const MoviesForm = () => {
   const [searchTermOne, setSearchOne, resetSearchOne] = useInputState("");
-  const [searchTermTwo, setSearchTwo] = useInputState("");
+  const [searchTermTwo, setSearchTwo, resetSearchTwo] = useInputState("");
   const [moviesOne, fetchMoviesOne, resetMoviesOne] = useRequestDataState([]);
-  const [moviesTwo, fetchMoviesTwo] = useRequestDataState([]);
-  const [movie, setMovie] = useState({});
-  const [movieId, setMovieId] = useState("");
+  const [moviesTwo, fetchMoviesTwo, resetMoviesTwo] = useRequestDataState([]);
+  const [movieOne, setMovieOne] = useMovieState({});
+  const [movieTwo, setMovieTwo] = useMovieState({});
+  const [movieIdOne, setMovieIdOne] = useState("");
+  const [movieIdTwo, setMovieIdTwo] = useState("");
 
-  const handleMovieSeclect = (e) => {
-    setMovieId(e.target.id);
+  const handleMovieSeclectOne = (e) => {
+    setMovieIdOne(e.target.id);
     resetSearchOne();
     resetMoviesOne();
+  };
+
+  const handleMovieSeclectTwo = (e) => {
+    setMovieIdTwo(e.target.id);
+    resetSearchTwo();
+    resetMoviesTwo();
   };
 
   useEffect(() => {
@@ -45,20 +54,16 @@ export const MoviesForm = () => {
   }, [searchTermTwo]);
 
   useEffect(() => {
-    const handleMovieData = async (movieId) => {
-      const response = await axios.get("http://www.omdbapi.com/", {
-        params: {
-          apikey: "b1c01351",
-          i: movieId,
-        },
-      });
-      setMovie(response.data);
-      console.log(response.data);
-    };
-    if (movieId) {
-      handleMovieData(movieId);
-    }
-  }, [movieId]);
+    if (!movieIdOne) return;
+
+    setMovieOne(movieIdOne);
+  }, [movieIdOne]);
+
+  useEffect(() => {
+    if (!movieIdTwo) return;
+
+    setMovieTwo(movieIdTwo);
+  }, [movieIdTwo]);
 
   return (
     <Form className="my-3">
@@ -72,8 +77,11 @@ export const MoviesForm = () => {
             value={searchTermOne}
             onChange={setSearchOne}
           />
-          <MovieResults movies={moviesOne} selectMovie={handleMovieSeclect} />
-          <MovieDetailes movie={movie} />
+          <MovieResults
+            movies={moviesOne}
+            selectMovie={handleMovieSeclectOne}
+          />
+          <MovieDetailes movie={movieOne} />
         </div>
         <div className="col-6">
           <Form.Control
@@ -83,7 +91,11 @@ export const MoviesForm = () => {
             value={searchTermTwo}
             onChange={setSearchTwo}
           />
-          <MovieResults movies={moviesTwo} />
+          <MovieResults
+            movies={moviesTwo}
+            selectMovie={handleMovieSeclectTwo}
+          />
+          <MovieDetailes movie={movieTwo} />
         </div>
       </Row>
     </Form>
