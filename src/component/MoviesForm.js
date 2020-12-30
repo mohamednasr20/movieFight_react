@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
-import useInputState from "../hooks/useInputState";
+import React, { useState, useEffect, useContext } from "react";
 import useRequestDataState from "../hooks/useRequestDataState";
 import { MovieResults } from "./MovieResults";
 import { MovieDetailes } from "./MovieDetailes";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import useMovieState from "../hooks/useMovieState";
+import { SearchTermContext } from "../contexts/SearchTermState";
 
 export const MoviesForm = () => {
-  const [searchTermOne, setSearchOne, resetSearchOne] = useInputState("");
-  const [searchTermTwo, setSearchTwo, resetSearchTwo] = useInputState("");
   const [moviesOne, fetchMoviesOne, resetMoviesOne] = useRequestDataState([]);
   const [moviesTwo, fetchMoviesTwo, resetMoviesTwo] = useRequestDataState([]);
   const [movieOne, setMovieOne] = useMovieState({});
@@ -17,15 +15,19 @@ export const MoviesForm = () => {
   const [movieIdOne, setMovieIdOne] = useState("");
   const [movieIdTwo, setMovieIdTwo] = useState("");
 
+  const { handleChange, searchTermOne, searchTermTwo, reset } = useContext(
+    SearchTermContext
+  );
+
   const handleMovieSeclectOne = (e) => {
     setMovieIdOne(e.target.id);
-    resetSearchOne();
+    reset("searchTermOne");
     resetMoviesOne();
   };
 
   const handleMovieSeclectTwo = (e) => {
     setMovieIdTwo(e.target.id);
-    resetSearchTwo();
+    reset("searchTermTwo");
     resetMoviesTwo();
   };
 
@@ -74,9 +76,9 @@ export const MoviesForm = () => {
           <Form.Control
             size="lg"
             type="text"
-            placeholder="movie Name"
+            name="searchTermOne"
             value={searchTermOne}
-            onChange={setSearchOne}
+            onChange={(e) => handleChange(e)}
           />
           <MovieResults
             movies={moviesOne}
@@ -88,9 +90,9 @@ export const MoviesForm = () => {
           <Form.Control
             size="lg"
             type="text"
-            placeholder="movie Name"
+            name="searchTermTwo"
             value={searchTermTwo}
-            onChange={setSearchTwo}
+            onChange={(e) => handleChange(e)}
           />
           <MovieResults
             movies={moviesTwo}
