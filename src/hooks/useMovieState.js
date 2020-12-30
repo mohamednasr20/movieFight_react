@@ -7,7 +7,6 @@ const useMovieState = (initalVal) => {
 
   const movieData = async (id) => {
     const movie = await handleMovieData(id);
-    console.log(movie);
 
     setValue(movie);
   };

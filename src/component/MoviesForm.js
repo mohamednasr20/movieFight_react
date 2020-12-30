@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useInputState from "../hooks/useInputState";
 import useRequestDataState from "../hooks/useRequestDataState";
-import useIdState from "../hooks/useInputState";
 import { MovieResults } from "./MovieResults";
 import { MovieDetailes } from "./MovieDetailes";
 import Row from "react-bootstrap/Row";
@@ -57,12 +56,14 @@ export const MoviesForm = () => {
     if (!movieIdOne) return;
 
     setMovieOne(movieIdOne);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movieIdOne]);
 
   useEffect(() => {
     if (!movieIdTwo) return;
 
     setMovieTwo(movieIdTwo);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movieIdTwo]);
 
   return (
